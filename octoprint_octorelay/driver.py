@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
-from RPi import GPIO
+from gpiozero import OutputDevice
 
-# The driver operates BCM mode of pins enumeration
-GPIO.setmode(GPIO.BCM)
 
 def xor(left: bool, right: bool) -> bool:
     return left is not right
@@ -26,10 +24,8 @@ class Relay():
 
     def is_closed(self) -> bool:
         """Returns the logical state of the relay."""
-        GPIO.setwarnings(False)
-        GPIO.setup(self.pin, GPIO.OUT)
-        pin_state = bool(GPIO.input(self.pin))
-        GPIO.setwarnings(True)
+        pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
+        pin_state = bool(pin.value)
         return xor(self.inverted, pin_state)
 
     def toggle(self, desired_state: Optional[bool] = None) -> bool:
@@ -40,8 +36,9 @@ class Relay():
         """
         if desired_state is None:
             desired_state = not self.is_closed()
-        GPIO.setwarnings(False)
-        GPIO.setup(self.pin, GPIO.OUT)
-        GPIO.output(self.pin, xor(self.inverted, desired_state))
-        GPIO.setwarnings(True)
+        pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
+        if xor(self.inverted, desired_state):
+            pin.on()
+        else:
+            pin.off()
         return desired_state

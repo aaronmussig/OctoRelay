@@ -21,14 +21,14 @@ miniver_version, cmdclass = get_version_and_cmdclass(r"octoprint_octorelay")
 # Do not forget to adjust the following variables to your own plugin.
 
 # The plugin's identifier, has to be unique
-plugin_identifier = "octorelay"
+plugin_identifier = "octorelaypi5"
 
 # The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
-plugin_package = "octoprint_octorelay"
+plugin_package = "octoprint_octorelaypi5"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "OctoRelay"
+plugin_name = "OctoRelayPi5"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
 plugin_version = miniver_version
@@ -51,7 +51,7 @@ plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 # todo after dropping 3.7 remove typing-extensions (used by model.py and listing.py)
-plugin_requires = ["RPi.GPIO", "typing-extensions"]
+plugin_requires = ["gpiozero", "typing-extensions"]
 
 # --------------------------------------------------------------------------------------------------------------------
 # More advanced options that you usually shouldn't have to touch follow after this point
