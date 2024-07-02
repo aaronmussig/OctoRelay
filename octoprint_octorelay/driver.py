@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
-from gpiozero import OutputDevice
-
+import gpiod
+from gpiod.chip import Chip
+from gpiod.line import Direction, Value
 
 def xor(left: bool, right: bool) -> bool:
     return left is not right
@@ -24,8 +25,34 @@ class Relay():
 
     def is_closed(self) -> bool:
         """Returns the logical state of the relay."""
-        pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
-        pin_state = bool(pin.value)
+        # https://github.com/brgl/libgpiod/blob/master/bindings/python/examples/get_line_value.py
+        with gpiod.request_lines(
+                "/dev/gpiochip4",
+                consumer="get-line-value",
+                config={self.pin:  gpiod.LineSettings(direction=Direction.INPUT)},
+        ) as request:
+            value = request.get_value(self.pin)
+            pin_state = value is Value.ACTIVE
+
+        #     print("{}={}".format(25, value))
+        #
+        #
+        # with gpiod.Chip("/dev/gpiochip4") as chip:
+        #
+        #     info = chip.get_line_info(25)
+        #     is_input = info.direction == gpiod.line.Direction.INPUT
+        #     print(
+        #         "line {:>3}: {:>12} {:>12} {:>8} {:>10}".format(
+        #             info.offset,
+        #             info.name or "unnamed",
+        #             info.consumer or "unused",
+        #             "input" if is_input else "output",
+        #             "active-low" if info.active_low else "active-high",
+        #         )
+        #     )
+        #
+        # pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
+        # pin_state = bool(pin.value)
         return xor(self.inverted, pin_state)
 
     def toggle(self, desired_state: Optional[bool] = None) -> bool:
@@ -36,9 +63,17 @@ class Relay():
         """
         if desired_state is None:
             desired_state = not self.is_closed()
-        pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
+
         if xor(self.inverted, desired_state):
-            pin.on()
+            value = Value.ACTIVE
         else:
-            pin.off()
+            value = Value.INACTIVE
+
+        with gpiod.request_lines("/dev/gpiochip4",
+                consumer="toggle-line-value",
+                config={
+                    self.pin: gpiod.LineSettings(direction=Direction.OUTPUT, output_value=value)
+                },
+        ) as request:
+            request.set_value(self.pin, value)
         return desired_state
