@@ -110,7 +110,8 @@ class OctoRelayPlugin(
             if bool(settings[index]["active"]):
                 relay = Relay(
                     int(settings[index]["relay_pin"] or 0),
-                    bool(settings[index]["inverted_output"])
+                    bool(settings[index]["inverted_output"]),
+                    self._logger
                 )
                 active_relays.append({
                     "id": index,
@@ -126,7 +127,9 @@ class OctoRelayPlugin(
             raise HandlingException(400)
         return Relay(
             int(settings["relay_pin"] or 0),
-            bool(settings["inverted_output"])
+            bool(settings["inverted_output"],
+                    self._logger
+                 )
         ).is_closed()
 
     def handle_update_command(self, index: str, target: Optional[bool] = None) -> bool:
@@ -317,7 +320,8 @@ class OctoRelayPlugin(
             active = bool(settings[index]["active"])
             relay = Relay(
                 int(settings[index]["relay_pin"] or 0),
-                bool(settings[index]["inverted_output"])
+                bool(settings[index]["inverted_output"]),
+                    self._logger
             )
             relay_state = relay.is_closed() if active else False
             task = upcoming_tasks[index]
@@ -366,7 +370,8 @@ class OctoRelayPlugin(
             model_state = self.model[index]["relay_state"] # bool since v3.1
             actual_state = Relay(
                 self.model[index]["relay_pin"],
-                self.model[index]["inverted_output"]
+                self.model[index]["inverted_output"],
+                    self._logger
             ).is_closed() if active else False
             if active and (actual_state is not model_state):
                 self._logger.debug(f"relay: {index} has changed its pin state")
