@@ -246,7 +246,9 @@ class OctoRelayPlugin(
             f"Toggling the relay {index} on pin {pin}" if target is None else
             f"Turning the relay {index} {'ON' if target else 'OFF'} (pin {pin})"
         )
+        self._logger.debug(f'XXX running relay {index} = {target}')
         state = relay.toggle(target)
+        self._logger.debug(f'XXX run relay {index} = {target} (now {state})')
         cmd = settings["cmd_on" if state else "cmd_off"]
         self.run_system_command(cmd)
         if state:
