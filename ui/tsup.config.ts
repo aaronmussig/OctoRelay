@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   entry: ["octorelay.ts"],
-  outDir: "../octoprint_octorelay/static/js",
+  outDir: "../octoprint_octorelaypi5/static/js",
   format: "cjs",
   outExtension: () => ({ js: ".js" }),
   splitting: false,

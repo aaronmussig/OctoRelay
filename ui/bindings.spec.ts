@@ -4,7 +4,7 @@ import { describe, test, expect } from "vitest";
 
 describe("Knockout bindings", () => {
   const html = readFileSync(
-    "../octoprint_octorelay/templates/octorelay_settings.jinja2",
+    "../octoprint_octorelaypi5/templates/octorelay_settings.jinja2",
     "utf-8",
   );
   const document = JSDOM.fragment(html);

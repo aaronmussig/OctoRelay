@@ -26,16 +26,16 @@ sys.modules["octoprint.access.permissions"] = Mock(
 )
 
 migrationsMock = Mock()
-sys.modules["octoprint_octorelay.migrations"] = migrationsMock
+sys.modules["octoprint_octorelaypi5.migrations"] = migrationsMock
 
 relayMock = Mock()
 relayConstructorMock = Mock(return_value=relayMock)
-sys.modules["octoprint_octorelay.driver"] = Mock(
+sys.modules["octoprint_octorelaypi5.driver"] = Mock(
     Relay=relayConstructorMock
 )
 
 # pylint: disable=wrong-import-position
-from octoprint_octorelay import (
+from octoprint_octorelaypi5 import (
     OctoRelayPlugin, __plugin_pythoncompat__, __plugin_implementation__,
     __plugin_hooks__, RELAY_INDEXES, Task, HandlingException
 )

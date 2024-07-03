@@ -1,8 +1,8 @@
 include README.md
 include CHANGELOG.md
-recursive-include octoprint_octorelay/templates *
-recursive-include octoprint_octorelay/translations *
-recursive-include octoprint_octorelay/static *
-exclude octoprint_octorelay/static/js/.gitkeep
-exclude octoprint_octorelay/static/css/.gitkeep
+recursive-include octoprint_octorelaypi5/templates *
+recursive-include octoprint_octorelaypi5/translations *
+recursive-include octoprint_octorelaypi5/static *
+exclude octoprint_octorelaypi5/static/js/.gitkeep
+exclude octoprint_octorelaypi5/static/css/.gitkeep
 prune tests

@@ -1,6 +1,6 @@
 # OctoRelayPi5
 
-This fork replaces the RPi GPIO library with gpiozero for use on the Raspberry Pi 5.
+This fork replaces the RPi GPIO library with pinctrl for use on the Raspberry Pi 5.
 
 [![CI](https://github.com/borisbu/OctoRelay/actions/workflows/CI.yaml/badge.svg)](https://github.com/borisbu/OctoRelay/actions/workflows/CI.yaml)
 [![CodeQL](https://github.com/borisbu/OctoRelay/actions/workflows/codeql.yml/badge.svg)](https://github.com/borisbu/OctoRelay/actions/workflows/codeql.yml)

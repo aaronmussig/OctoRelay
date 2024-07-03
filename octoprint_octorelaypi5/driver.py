@@ -12,7 +12,7 @@ def xor(left: bool, right: bool) -> bool:
 class Relay():
     def __init__(self, pin: int, inverted: bool, logger):
         self.logger = logger
-        self.logger.info(f'ZZZ instantiated {pin} {inverted}')
+        self.logger.debug(f'>>> instantiated {pin} {inverted}')
         self.pin = pin # GPIO pin
         self.inverted = inverted # marks the relay as normally closed
 

@@ -10,12 +10,12 @@ GPIO_mock.OUT = "MockedOUT"
 sys.modules["RPi.GPIO"] = GPIO_mock
 
 # pylint: disable=wrong-import-position
-from octoprint_octorelay.driver import Relay
+from octoprint_octorelaypi5.driver import Relay
 
 # avoid keeping other modules automatically imported by this test
-del sys.modules["octoprint_octorelay"]
-del sys.modules["octoprint_octorelay.migrations"]
-del sys.modules["octoprint_octorelay.task"]
+del sys.modules["octoprint_octorelaypi5"]
+del sys.modules["octoprint_octorelaypi5.migrations"]
+del sys.modules["octoprint_octorelaypi5.task"]
 
 class TestRelayDriver(unittest.TestCase):
     def test_constructor(self):

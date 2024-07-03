@@ -5,20 +5,20 @@ import sys
 from unittest.mock import Mock
 
 # Revert mocking by test_init.py
-if "octoprint_octorelay.migrations" in sys.modules:
-    del sys.modules["octoprint_octorelay.migrations"]
+if "octoprint_octorelaypi5.migrations" in sys.modules:
+    del sys.modules["octoprint_octorelaypi5.migrations"]
 
 # Mocking required before the further import
 sys.modules["RPi.GPIO"] = Mock()
 
 # pylint: disable=wrong-import-position
-from octoprint_octorelay.const import SETTINGS_VERSION
-from octoprint_octorelay.migrations import migrators, migrate, v0, v1, v2, v3
+from octoprint_octorelaypi5.const import SETTINGS_VERSION
+from octoprint_octorelaypi5.migrations import migrators, migrate, v0, v1, v2, v3
 
 # avoid keeping other modules automatically imported by this test
-del sys.modules["octoprint_octorelay"]
-del sys.modules["octoprint_octorelay.driver"]
-del sys.modules["octoprint_octorelay.task"]
+del sys.modules["octoprint_octorelaypi5"]
+del sys.modules["octoprint_octorelaypi5.driver"]
+del sys.modules["octoprint_octorelaypi5.task"]
 
 class TestMigrations(unittest.TestCase):
     def test_migrators__quantity(self):
