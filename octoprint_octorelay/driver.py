@@ -3,13 +3,17 @@ from typing import Optional
 import gpiod
 from gpiod.chip import Chip
 from gpiod.line import Direction, Value
+import logging
+
+logger = logging.getLogger()
+
 
 def xor(left: bool, right: bool) -> bool:
     return left is not right
 
 class Relay():
     def __init__(self, pin: int, inverted: bool):
-        print(f'instantiated {pin} {inverted}')
+        logger.info(f'ZZZ instantiated {pin} {inverted}')
         self.pin = pin # GPIO pin
         self.inverted = inverted # marks the relay as normally closed
 
@@ -28,6 +32,7 @@ class Relay():
         """Returns the logical state of the relay."""
         # https://github.com/brgl/libgpiod/blob/master/bindings/python/examples/get_line_value.py
         print(f'checkiing closed {self.pin}')
+        logger.info(f'checking closed {self.pin}')
         with gpiod.request_lines(
                 "/dev/gpiochip4",
                 consumer="get-line-value",
@@ -71,7 +76,7 @@ class Relay():
         else:
             value = Value.INACTIVE
 
-        print(f'toggle {self.pin} {desired_state}')
+        logger.info(f'toggle {self.pin} {desired_state}')
 
         with gpiod.request_lines("/dev/gpiochip4",
                 consumer="toggle-line-value",
