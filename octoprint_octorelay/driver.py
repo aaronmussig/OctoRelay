@@ -33,7 +33,10 @@ class Relay():
         self.logger.info(f'checking closed {self.pin}')
         result = subprocess.check_output(["pinctrl", "get", str(self.pin)], encoding='utf-8')
         hits = RE_OUTPUT.findall(result)
-        pin_state = hits[0] == 'hi'
+        if hits:
+            pin_state = hits[0] == 'hi'
+        else:
+            pin_state = False
         return xor(self.inverted, pin_state)
 
     def toggle(self, desired_state: Optional[bool] = None) -> bool:
@@ -50,7 +53,7 @@ class Relay():
         else:
             value = "dl"
 
-        self.logger.info(f'toggle {self.pin} {desired_state}')
+        self.logger.info(f'>>> toggle {self.pin} {desired_state} = {value}')
         result = subprocess.check_output(["pinctrl", "set", "11", "op", value, "pd"], encoding='utf-8')
         self.logger.info(f'result: {result}')
         return desired_state
