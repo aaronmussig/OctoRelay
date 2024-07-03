@@ -241,7 +241,7 @@ class OctoRelayPlugin(
                 self._printer.disconnect()
         pin = int(settings["relay_pin"] or 0)
         inverted = bool(settings["inverted_output"])
-        relay = Relay(pin, inverted)
+        relay = Relay(pin, inverted, self._logger)
         self._logger.debug(
             f"Toggling the relay {index} on pin {pin}" if target is None else
             f"Turning the relay {index} {'ON' if target else 'OFF'} (pin {pin})"
