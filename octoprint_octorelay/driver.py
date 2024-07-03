@@ -9,6 +9,7 @@ def xor(left: bool, right: bool) -> bool:
 
 class Relay():
     def __init__(self, pin: int, inverted: bool):
+        print(f'instantiated {pin} {inverted}')
         self.pin = pin # GPIO pin
         self.inverted = inverted # marks the relay as normally closed
 
@@ -26,6 +27,7 @@ class Relay():
     def is_closed(self) -> bool:
         """Returns the logical state of the relay."""
         # https://github.com/brgl/libgpiod/blob/master/bindings/python/examples/get_line_value.py
+        print(f'checkiing closed {self.pin}')
         with gpiod.request_lines(
                 "/dev/gpiochip4",
                 consumer="get-line-value",
@@ -68,6 +70,8 @@ class Relay():
             value = Value.ACTIVE
         else:
             value = Value.INACTIVE
+
+        print(f'toggle {self.pin} {desired_state}')
 
         with gpiod.request_lines("/dev/gpiochip4",
                 consumer="toggle-line-value",
