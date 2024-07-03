@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
-import gpiod
-from gpiod.chip import Chip
-from gpiod.line import Direction, Value
+import re
+import subprocess
 
 
+RE_OUTPUT = re.compile(r'.+ \| ([hilo]{2}) \/\/.+')
 
 def xor(left: bool, right: bool) -> bool:
     return left is not right
@@ -31,33 +31,9 @@ class Relay():
         """Returns the logical state of the relay."""
         # https://github.com/brgl/libgpiod/blob/master/bindings/python/examples/get_line_value.py
         self.logger.info(f'checking closed {self.pin}')
-        with gpiod.request_lines(
-                "/dev/gpiochip4",
-                consumer="get-line-value",
-                config={self.pin:  gpiod.LineSettings(direction=Direction.INPUT)},
-        ) as request:
-            value = request.get_value(self.pin)
-            pin_state = value is Value.ACTIVE
-
-        #     print("{}={}".format(25, value))
-        #
-        #
-        # with gpiod.Chip("/dev/gpiochip4") as chip:
-        #
-        #     info = chip.get_line_info(25)
-        #     is_input = info.direction == gpiod.line.Direction.INPUT
-        #     print(
-        #         "line {:>3}: {:>12} {:>12} {:>8} {:>10}".format(
-        #             info.offset,
-        #             info.name or "unnamed",
-        #             info.consumer or "unused",
-        #             "input" if is_input else "output",
-        #             "active-low" if info.active_low else "active-high",
-        #         )
-        #     )
-        #
-        # pin = OutputDevice(pin=self.pin, active_high=True, initial_value=None)
-        # pin_state = bool(pin.value)
+        result = subprocess.check_output(["pinctrl", "get", str(self.pin)], encoding='utf-8')
+        hits = RE_OUTPUT.findall(result)
+        pin_state = hits[0] == 'hi'
         return xor(self.inverted, pin_state)
 
     def toggle(self, desired_state: Optional[bool] = None) -> bool:
@@ -70,17 +46,11 @@ class Relay():
             desired_state = not self.is_closed()
 
         if xor(self.inverted, desired_state):
-            value = Value.ACTIVE
+            value = "dh"
         else:
-            value = Value.INACTIVE
+            value = "dl"
 
         self.logger.info(f'toggle {self.pin} {desired_state}')
-
-        with gpiod.request_lines("/dev/gpiochip4",
-                consumer="toggle-line-value",
-                config={
-                    self.pin: gpiod.LineSettings(direction=Direction.OUTPUT, output_value=value)
-                },
-        ) as request:
-            request.set_value(self.pin, value)
+        result = subprocess.check_output(["pinctrl", "set", "11", "op", value, "pd"], encoding='utf-8')
+        self.logger.info(f'result: {result}')
         return desired_state

@@ -51,7 +51,7 @@ plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 # todo after dropping 3.7 remove typing-extensions (used by model.py and listing.py)
-plugin_requires = ["gpiod", "typing-extensions"]
+plugin_requires = ["typing-extensions"]
 
 # --------------------------------------------------------------------------------------------------------------------
 # More advanced options that you usually shouldn't have to touch follow after this point
